@@ -68,6 +68,7 @@ main {
   flex-direction: column;
   justify-content: space-between;
   align-items: space-evenly;
+  transition: transform 0.2s ease-out;
 }
 
 footer {

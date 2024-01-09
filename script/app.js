@@ -8,18 +8,29 @@ const myAtropos = Atropos({
   shadow: false,
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  function handleOrientation(event) {
-    var tiltX = event.beta;
-    var tiltY = event.gamma;
+document.addEventListener('DOMContentLoaded', function () {
+    // Adjust these constants for sensitivity and damping
+    const sensitivity = 0.5; // Adjust the sensitivity
+    const dampingFactor = 0.1; // Adjust the damping factor
 
-    document.querySelector(".home-layout").style.transform =
-      "rotateX(" + tiltY + "deg) rotateY(" + tiltX + "deg)";
-  }
+    let currentRotationX = 0;
+    let currentRotationY = 0;
 
-  if (window.DeviceOrientationEvent) {
-    window.addEventListener("deviceorientation", handleOrientation);
-  } else {
-    console.error("Device orientation events not supported.");
-  }
+    function handleOrientation(event) {
+        var tiltX = event.beta;
+        var tiltY = event.gamma;
+
+        var scaledTiltX = tiltX * sensitivity;
+        var scaledTiltY = tiltY * sensitivity;
+
+        currentRotationX = currentRotationX * (1 - dampingFactor) + scaledTiltY * dampingFactor;
+        currentRotationY = currentRotationY * (1 - dampingFactor) + scaledTiltX * dampingFactor;
+        document.querySelector('.home-layout').style.transform = 'rotateX(' + currentRotationX + 'deg) rotateY(' + currentRotationY + 'deg)';
+    }
+
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', handleOrientation);
+    } else {
+        console.error('Device orientation events not supported.');
+    }
 });
